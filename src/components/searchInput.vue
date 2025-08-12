@@ -253,6 +253,10 @@ export default {
       this.getWeatherData()
       this.getForecastToday() // fetch forecast for selected city
       this.getForecastPerDay() // fetch forecast for selected city
+      // Allow watcher again
+      this.$nextTick(() => {
+        this.skipWatcher = false
+      })
     },
     getWeatherIcons() {
       // return icon for the current weather condition or fallback if not found
