@@ -6,7 +6,7 @@
     ></div>
     <div
       v-show="selectedLayer === 'clouds'"
-      class="flex flex-wrap justify-center items-center gap-4 p-4"
+      class="flex flex-wrap items-center justify-center gap-4 p-4"
     >
       <div class="flex items-center gap-1">
         <span class="w-3 h-3 bg-white border border-gray-400"></span>
@@ -30,7 +30,7 @@
 
     <div
       v-show="selectedLayer === 'wind'"
-      class="flex flex-wrap justify-center items-center gap-4 p-4"
+      class="flex flex-wrap items-center justify-center gap-4 p-4"
     >
       <div class="flex items-center gap-1">
         <span class="w-3 h-3 bg-white border border-gray-400" style="background-color: #d0e8ff">
@@ -64,7 +64,7 @@
 
     <div
       v-show="selectedLayer === 'precipitation'"
-      class="flex flex-wrap justify-center items-center gap-4 p-4"
+      class="flex flex-wrap items-center justify-center gap-4 p-4"
     >
       <div class="flex items-center gap-1">
         <span class="w-3 h-3 bg-white border border-gray-400" style="background-color: #d0e8ff">
@@ -106,7 +106,7 @@
 
     <div
       v-show="selectedLayer === 'temp'"
-      class="flex flex-wrap justify-center items-center gap-4 p-4"
+      class="flex flex-wrap items-center justify-center gap-4 p-4"
     >
       <div class="flex items-center gap-1">
         <span class="w-3 h-3 bg-white border border-gray-400" style="background-color: #0000ff">
@@ -213,6 +213,15 @@
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import axios from 'axios'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+
+// Fix Leaflet default icon path for production
+delete L.Icon.Default.prototype._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+})
 export default {
   props: {
     data: {
