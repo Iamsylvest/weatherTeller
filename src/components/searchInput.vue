@@ -1,15 +1,15 @@
 <template>
-  <div class="p-4 flex items-center justify-center">
+  <div class="flex items-center justify-center p-4">
     <div class="relative w-full min-w-[150px] max-w-[800px]">
       <input
         type="search"
         v-model="search"
         placeholder="Search city..."
-        class="w-full border p-2 bg-custom-gray border-gray-300 rounded-xl shadow-lg focus:outline-none focus:ring-2 focus:ring-custom-white px-4 py-2 italic text-custom-white pr-10"
+        class="w-full p-2 px-4 py-2 pr-10 italic border border-gray-300 shadow-lg bg-custom-gray rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-white text-custom-white"
       />
       <ul
         v-if="suggestions.length"
-        class="absolute bg-custom-gray text-custom-white border w-full max-h-40 overflow-auto z-10"
+        class="absolute z-10 w-full overflow-auto border bg-custom-gray text-custom-white max-h-40"
       >
         <li
           v-for="(city, index) in suggestions"
@@ -20,7 +20,7 @@
           {{ city }}
         </li>
       </ul>
-      <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+      <span class="absolute text-gray-500 transform -translate-y-1/2 right-3 top-1/2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -40,11 +40,11 @@
     </div>
   </div>
 
-  <div class="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 gap-4 p-4 md:p-8 md:grid-cols-2">
     <!-- Card 1: Location Info -->
-    <div class="w-full p-4 rounded-lg text-custom-white flex items-center justify-center">
+    <div class="flex items-center justify-center w-full p-4 rounded-lg text-custom-white">
       <span v-if="!showDetails" class="text-base italic font-medium md:text-lg"> </span>
-      <span v-else class="text-base italic font-medium md:text-2xl break-words">
+      <span v-else class="text-base italic font-medium break-words md:text-2xl">
         <span class="text-[24px] lg:text-[52px] font-medium mb-4 block lg:mb-8"> {{ city }} </span>
         <span class="text-[42px] lg:text-[74px] font-medium mb-2 block">
           {{ temperature }}°C
@@ -53,7 +53,7 @@
           </span>
         </span>
         <span class="text-[16px] lg:text-[18] font-medium block"> {{ dateAndTime }}</span> <br />
-        <div class="grid grid-cols-3 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-3 gap-4 md:grid-cols-3">
           <div>
             <span class="text-[14px] lg:text-[18px] font-medium"
               >Humidity <br />{{ humidity }}%
@@ -77,13 +77,13 @@
 
     <!-- Card 2: Weather Visual -->
     <!-- Parent div must have fixed width and height -->
-    <div class="w-full h-fit p-4 rounded-lg text-custom-white flex items-center justify-center">
+    <div class="flex items-center justify-center w-full p-4 rounded-lg h-fit text-custom-white">
       <span v-if="!showDetails" class="text-base italic font-medium md:text-lg"> </span>
       <span v-else>
         <img
           :src="getWeatherGif()"
           alt="Weather gif"
-          class="w-full h-full object-cover rounded-md"
+          class="object-cover w-full h-full rounded-md"
         />
       </span>
     </div>
@@ -130,6 +130,7 @@ export default {
   },
   data() {
     return {
+      skipWatcher: false,
       search: '',
       city: '',
       dateAndTime: '',
@@ -187,6 +188,7 @@ export default {
   },
   watch: {
     search: debounce(async function (newVal) {
+      if (this.skipWatcher) return // 🚫 skip if triggered by click
       if (newVal.length >= 3) {
         try {
           const apiKey = import.meta.env.VITE_WEATHER_API_KEY
@@ -245,6 +247,7 @@ export default {
       }
     },
     selectSuggestion(city) {
+      this.skipWatcher = true
       this.search = city
       this.suggestions = []
       this.getWeatherData()
